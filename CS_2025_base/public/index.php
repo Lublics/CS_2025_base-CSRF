@@ -19,7 +19,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 // Vérification CSRF sur les requêtes POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $csrfValue = $_REQUEST["CSRF"] ?? null;
-    if (verifierCSRF($csrfValue) != 1) {
+    if (!verifierCSRF($csrfValue)) {
         die("Erreur CSRF : jeton invalide ou absent. Veuillez réessayer.");
     }
 }

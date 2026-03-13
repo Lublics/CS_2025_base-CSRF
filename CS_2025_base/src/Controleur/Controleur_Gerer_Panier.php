@@ -37,7 +37,13 @@ class Controleur_Gerer_Panier
 
     public function diminuerQTT(Request $request, Response $response, array $args): Response
     {
-       
+        if (direIsReload()) {
+            $this->init();
+            $listeArticlePanier = Modele_Commande::Panier_ListeArticle($_SESSION["idEntreprise"]);
+            $this->vue->addToCorps(new Vue_Panier_Client($listeArticlePanier));
+            $response->getBody()->write($this->vue->donneStr());
+            return $response;
+        }
         $idProduit = $args["idProduit"];
         Modele_Commande::Panier_DiminuerQTT_Article($_SESSION["idEntreprise"], $idProduit);
          $this->init();
@@ -49,7 +55,13 @@ class Controleur_Gerer_Panier
 
     public function augmenterQTT(Request $request, Response $response, array $args): Response
     {
-        
+        if (direIsReload()) {
+            $this->init();
+            $listeArticlePanier = Modele_Commande::Panier_ListeArticle($_SESSION["idEntreprise"]);
+            $this->vue->addToCorps(new Vue_Panier_Client($listeArticlePanier));
+            $response->getBody()->write($this->vue->donneStr());
+            return $response;
+        }
         $idProduit = $args["idProduit"];
         Modele_Commande::Panier_AugmenterQTT_Article($_SESSION["idEntreprise"], $idProduit);
         $this->init();

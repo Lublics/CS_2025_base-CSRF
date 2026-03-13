@@ -83,6 +83,9 @@ class Controleur_Gerer_CommandeClient
     public function Signalee_CommandeReceptionnee(Request $request, Response $response, array $args): Response
     {
         $this->init();
+        if (direIsReload()) {
+            return $this->VoirDetailCommande($request, $response, $args);
+        }
         if (isset($_REQUEST["info"]))
             $infoComplementaire = $_REQUEST["info"];
         else
@@ -103,6 +106,9 @@ class Controleur_Gerer_CommandeClient
     public function Signalee_CommandeReceptionneeIncident(Request $request, Response $response, array $args): Response
     {
         $this->init();
+        if (direIsReload()) {
+            return $this->VoirDetailCommande($request, $response, $args);
+        }
         if (isset($_REQUEST["info"]))
             $infoComplementaire = $_REQUEST["info"];
         else

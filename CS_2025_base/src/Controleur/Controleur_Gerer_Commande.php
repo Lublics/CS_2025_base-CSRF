@@ -69,14 +69,30 @@ class Controleur_Gerer_Commande
         return $response;
     }
 
+    private function afficherDetailCommande(Response $response, $idCommande): Response
+    {
+        $listeArticleCommande = Modele_Commande::Commande_Avoir_Article_Select_ParIdCommande($idCommande);
+        $infoCommande = Modele_Commande::Commande_Select_ParIdCommande($idCommande);
+        $histoEtatCommande = Modele_Commande::Historique_Etat_Commande_Select_ParIdCommande($idCommande);
+        $this->vue->addToCorps(new Vue_Panier_Client($listeArticleCommande, true, $infoCommande));
+        $this->vue->addToCorps(new Vue_Action_Sur_Commande_Entreprise($infoCommande));
+        $this->vue->addToCorps(new Vue_Commande_Info($infoCommande));
+        $this->vue->addToCorps(new Vue_Commande_Histo($histoEtatCommande));
+        $response->getBody()->write($this->vue->donneStr());
+        return $response;
+    }
+
     public function Signaler_CommandePayee(Request $request, Response $response, array $args): Response
     {
         $this->init();
+        $idCommande = $args["idCommande"];
+        if (direIsReload()) {
+            return $this->afficherDetailCommande($response, $idCommande);
+        }
         if (isset($_REQUEST["info"]))
             $infoComplementaire = $_REQUEST["info"];
         else
             $infoComplementaire = "";
-        $idCommande = $args["idCommande"];
         Modele_Commande::HistoriqueEtatCommande_Inserer($idCommande, 3, $infoComplementaire, -1, $_SESSION["idUtilisateur"]);
         
         $listeArticleCommande = Modele_Commande::Commande_Avoir_Article_Select_ParIdCommande($idCommande);
@@ -93,11 +109,14 @@ class Controleur_Gerer_Commande
     public function Signalee_CommandeEnPreparation(Request $request, Response $response, array $args): Response
     {
         $this->init();
+        $idCommande = $args["idCommande"];
+        if (direIsReload()) {
+            return $this->afficherDetailCommande($response, $idCommande);
+        }
         if (isset($_REQUEST["info"]))
             $infoComplementaire = $_REQUEST["info"];
         else
             $infoComplementaire = "";
-         $idCommande = $args["idCommande"];
         Modele_Commande::HistoriqueEtatCommande_Inserer($idCommande, 4, $infoComplementaire, -1, $_SESSION["idUtilisateur"]);
         $listeArticleCommande = Modele_Commande::Commande_Avoir_Article_Select_ParIdCommande($idCommande);
         $infoCommande = Modele_Commande::Commande_Select_ParIdCommande($idCommande);
@@ -113,11 +132,14 @@ class Controleur_Gerer_Commande
     public function Signalee_CommandeProblemeStock(Request $request, Response $response, array $args): Response
     {
         $this->init();
+        $idCommande = $args["idCommande"];
+        if (direIsReload()) {
+            return $this->afficherDetailCommande($response, $idCommande);
+        }
         if (isset($_REQUEST["info"]))
             $infoComplementaire = $_REQUEST["info"];
         else
             $infoComplementaire = "";
-         $idCommande = $args["idCommande"];
         Modele_Commande::HistoriqueEtatCommande_Inserer($idCommande, 5, $infoComplementaire, -1, $_SESSION["idUtilisateur"]);
         $listeArticleCommande = Modele_Commande::Commande_Avoir_Article_Select_ParIdCommande($idCommande);
         $infoCommande = Modele_Commande::Commande_Select_ParIdCommande($idCommande);
@@ -133,11 +155,14 @@ class Controleur_Gerer_Commande
     public function Signalee_CommandeEnvoyée(Request $request, Response $response, array $args): Response
     {
         $this->init();
+        $idCommande = $args["idCommande"];
+        if (direIsReload()) {
+            return $this->afficherDetailCommande($response, $idCommande);
+        }
         if (isset($_REQUEST["info"]))
             $infoComplementaire = $_REQUEST["info"];
         else
             $infoComplementaire = "";
-        $idCommande = $args["idCommande"];
         Modele_Commande::HistoriqueEtatCommande_Inserer($idCommande, 6, $infoComplementaire, -1, $_SESSION["idUtilisateur"]);
         $listeArticleCommande = Modele_Commande::Commande_Avoir_Article_Select_ParIdCommande($idCommande);
         $infoCommande = Modele_Commande::Commande_Select_ParIdCommande($idCommande);

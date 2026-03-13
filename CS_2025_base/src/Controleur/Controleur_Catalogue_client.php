@@ -68,7 +68,13 @@ class Controleur_Catalogue_client
     }
     public function AjoutPanierClient(Request $request, Response $response, array $args): Response
     {
-       
+        if (direIsReload()) {
+            $this->init();
+            $listeProduit = Modele_Catalogue::Produits_Select_Libelle_Categ("client");
+            $this->vue->addToCorps(new Vue_Produits_Info_Clients($listeProduit));
+            $response->getBody()->write($this->vue->donneStr());
+            return $response;
+        }
         $idProduit = $args["idProduit"];
         Modele_Commande::Panier_Ajouter_Produit_ParIdProduit( $_SESSION["idEntreprise"],$idProduit );
          $this->init();
